@@ -8,10 +8,16 @@ get('/') do
   erb(:index)
 end
 
-post('/new_user') do
+post('/user') do
   username = params['username']
   password = params['password']
   password_confirmation = params['password_confirmation']
   @user = User.create(:username => username, :password => password, :password_confirmation => password_confirmation)
+  erb(:success)
+end
+
+get('/user') do
+  @user = User.find_by(:username => params['username'])
+  @user.authenticate(params['password'])
   erb(:success)
 end
