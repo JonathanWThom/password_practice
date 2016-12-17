@@ -1,0 +1,10 @@
+<%= @user.username %>
+<form action="/user" method="post">
+  <input type="hidden" name="user_id" value="<%= @user.id() %>">
+  <input type="hidden" name="user_password" value="<%= @user.password() %>">
+  <input name="info" placeholder="Info">
+  <button type="submit">Submit</button>
+</form>
+
+<%= @user.info %>
+<a href='/'>Home</a>
