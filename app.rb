@@ -1,6 +1,7 @@
 require("bundler/setup")
 Bundler.require(:default)
 require('pry')
+enable :sessions
 
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each { |file| require file }
 
@@ -21,9 +22,12 @@ post('/login') do
   @user = User.find_by(:username => params[:username])
     if @user && @user.authenticate(params[:password])
       session[:user_id] = @user.id
-      ## need a session id
+      ## must create unique session id
+      ## i don't think it's doing that right now
+
       redirect("/success")
       ## pass the session id to "success" page?
+      ## i don't quite understand this
     else
       redirect('/failure')
     end
@@ -34,6 +38,7 @@ get('/login') do
 end
 
 get('/success') do
+  @user = User.find(session[:user_id])
   erb(:success)
 end
 
