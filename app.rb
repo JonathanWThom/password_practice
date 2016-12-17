@@ -21,6 +21,7 @@ post('/signup') do
     redirect "/failure"
   end
 end
+## need to set uniqueness on username
 
 post('/login') do
   @user = User.find_by(:username => params[:username])
