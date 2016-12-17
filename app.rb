@@ -5,6 +5,8 @@ enable :sessions
 
 Dir[File.dirname(__FILE__) + '/lib/*.rb'].each { |file| require file }
 
+##make pages nice, use as a "default" password app
+
 get('/') do
   erb(:index)
 end
