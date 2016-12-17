@@ -41,6 +41,7 @@ get('/success') do
   @user = User.find(session[:user_id])
   erb(:success)
 end
+## figure out session timeout after inactivity
 
 get('/logout') do
   session.clear
