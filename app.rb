@@ -24,13 +24,11 @@ get('/sign_in') do
   erb(:sign_in)
 end
 
-## puts username and password in url bar!!! no good
-
 get('/user') do
   @user = User.find_by(:username => params['username'])
   if @user
     if @user.authenticate(params['password'])
-      erb(:user)
+      redirect("/user/#{@user.id()}")
     else
       erb(:errors)
     end
@@ -39,9 +37,15 @@ get('/user') do
   end
 end
 
-post('/user') do
-  @user = User.find(params['user_id'])
+get('/user/:id') do
+  @user = User.find(params['id'].to_i)
+  erb(:user)
+  ## must have authentication happen here so that you can't just enter their url 
+end
+
+post('/user/:id') do
+  @user = User.find(params['id'].to_i)
   @user.authenticate(params['user_password'])
   @user.update({:info => params['info']})
-  erb(:user)
+  redirect("/user/#{@user.id()}")
 end
