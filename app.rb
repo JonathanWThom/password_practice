@@ -8,44 +8,35 @@ get('/') do
   erb(:index)
 end
 
-post('/sign_in') do
-  username = params['username']
-  password = params['password']
-  password_confirmation = params['password_confirmation']
-  @user = User.new(:username => username, :password => password, :password_confirmation => password_confirmation)
-  if @user.save()
-    erb(:sign_in)
+post('/signup') do
+  user = User.new(:username => params[:username], :password => params[:password], :password_confirmation => params[:password_confirmation])
+  if user.save
+    redirect "/login"
   else
-    erb(:errors)
+    redirect "/failure"
   end
 end
 
-get('/sign_in') do
-  erb(:sign_in)
-end
-
-get('/user') do
-  @user = User.find_by(:username => params['username'])
-  if @user
-    if @user.authenticate(params['password'])
-      redirect("/user/#{@user.id()}")
+post('/login') do
+  @user = User.find_by(:username => params[:username])
+    if @user && @user.authenticate(params[:password])
+      session[:user_id] = @user.id
+      ## need a session id
+      redirect("/success")
+      ## pass the session id to "success" page?
     else
-      erb(:errors)
+      redirect('/failure')
     end
-  else
-    erb(:errors)
-  end
 end
 
-get('/user/:id') do
-  @user = User.find(params['id'].to_i)
-  erb(:user)
-  ## must have authentication happen here so that you can't just enter their url 
+get('/login') do
+  erb(:login)
 end
 
-post('/user/:id') do
-  @user = User.find(params['id'].to_i)
-  @user.authenticate(params['user_password'])
-  @user.update({:info => params['info']})
-  redirect("/user/#{@user.id()}")
+get('/success') do
+  erb(:success)
+end
+
+get('/failure') do
+  erb(:failure)
 end
